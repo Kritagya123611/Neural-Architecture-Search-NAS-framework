@@ -1,4 +1,4 @@
-# child_model.py
+# child.py
 # Is file mein hum ChildNet class define kar rahe hain
 # Ye class dynamically layers banata hai based on controller's recipe
 
@@ -17,8 +17,15 @@ class ChildNet(nn.Module):
         layers = []  # PyTorch layers yahan store karenge
         in_ch = input_channels  # starting input channels = 1
 
-        # ✅ Step 1: Convolution blocks add karte hain
-        for (kernel, out_ch, activation, pooling) in genotype['conv_blocks']:
+        # Convolution blocks add karte hain
+        for block in genotype['conv_blocks']:
+            kernel = block['kernel_size']
+            out_ch = block['filters']
+            activation = block['activation']
+
+            # Default pooling for all conv layers
+            pooling = 'max'  # or 'avg' if you prefer
+
             # Conv Layer
             layers.append(nn.Conv2d(in_ch, out_ch, kernel_size=kernel, padding=kernel//2))
             layers.append(nn.BatchNorm2d(out_ch))  # normalization for faster training
